@@ -1,21 +1,24 @@
+var balance = 1000;
 var response = query();
 
 while(!isQuit(response)){
   var x = getInput();
-  var deposit, withdraw;
+  var amount, action;
 
   switch(response){
-  case 'd':
-    deposit = deposit(x);
-  break;
-
-  case 'w':
-    withdraw = withdraw(x);
-    break;
-  default:
-    alert("Not a command");
+    case 'd':
+      amount = deposit(x);
+      action = 'deposit';
+      break;
+    case 'w':
+      amount = withdraw(x);
+      action = 'withdraw';
+      break;
+    default:
+      alert("Not a command");
+      query();
   }
-
+  changeBalance(amount, action);
   console.log(balance);
   response = query();
 }
@@ -23,7 +26,7 @@ while(!isQuit(response)){
 function query(){
   alert("Your ConsoleBank balance is " + balance + ".");
   var response = prompt("Do you want to (d)eposit, (w)ithdraw, or (q)uit?");
-  return response.toLowerCase;
+  return response.toLowerCase();
 }
 
 function isQuit(letter){
@@ -32,27 +35,31 @@ function isQuit(letter){
 
 function getInput(){
   var amount = prompt("Enter amount:");
-  return value * 1;
+  return amount * 1;
 }
 
 function deposit(x){
   if(x >= 500){
     reward(x);
+    return balance;
   } else {
     balance = balance + x;
     return balance;
   }
-  changeBalance(deposit);
 }
 
 function withdraw(x){
-  if(balance - x <= 0){
+
+  if(balance - x < 0){
     overdraft(x);
-    if(balance <= (-750)){
+    if(balance < (0 - 750)){
       closeAccount();
+      return balance;
     }
+  } else if (balance - x >= 0){
+    balance = balance - x;
+    return balance;
   }
-  changeBalance(withdraw);
 }
 
 function reward(x){
@@ -65,18 +72,16 @@ function overdraft(x){
   return balance;
 }
 
-function changeBalance(deposit,withdraw){
-  if(deposit){
-    alert("Your deposit of " + deposit + " has been received.");
-  } else {
-    alert("Your withdrawal of " + withdraw + " has been dispensed.")
-  }
+function changeBalance(amount, action){
+    alert("Your " + action + " has been processed.");
 }
 
 function closeAccount(){
   if (confirm("Are you sure? This will close your account!")){
     alert("ACCOUNT CLOSED!");
+    isQuit(q);
   } else {
+    balance = balance + x + 50;
     query();
   }
 }
